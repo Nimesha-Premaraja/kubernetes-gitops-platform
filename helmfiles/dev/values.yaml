@@ -1,2 +1,3 @@
 env:
   namespace: dev-namespace
+  component: app
