@@ -29,7 +29,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for git log analysis
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -71,4 +71,4 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add gitops/
           git commit -m "chore: update GitOps manifests [skip ci]" || exit 0
-          git push
+          git push origin HEAD:main
