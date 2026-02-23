@@ -9,6 +9,14 @@ on:
       - 'ci-cd/generator/**'
       - 'Makefile'
       - '.github/workflows/gitops-cd.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'helmfiles/**'
+      - 'ci-cd/generator/**'
+      - 'Makefile'
+      - '.github/workflows/gitops-cd.yml'
   workflow_dispatch:
 
 jobs:
