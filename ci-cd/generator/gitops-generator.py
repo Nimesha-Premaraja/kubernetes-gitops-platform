@@ -4,14 +4,16 @@ import shutil
 from pathlib import Path
 import yaml
 import time
-
 # -----------------------------------------------------------------------------
 # Configuration
 # -----------------------------------------------------------------------------
 
+# Ensure we're working from the repository root
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+os.chdir(REPO_ROOT)
 TMP_DIR = os.getenv("TMP_DIR", "templates")
 CONCURRENCY = os.getenv("CONCURRENCY", "20")
-GITOPS_DIR = Path("gitops")
+GITOPS_DIR = REPO_ROOT / "gitops"
 GITOPS_DIR.mkdir(exist_ok=True)
 
 # -----------------------------------------------------------------------------

@@ -1,0 +1,67 @@
+name: GitOps Continuous Delivery
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'helmfiles/**'
+      - 'ci-cd/generator/**'
+      - 'Makefile'
+      - '.github/workflows/gitops-cd.yml'
+  workflow_dispatch:
+
+jobs:
+  generate-gitops-manifests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git log analysis
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Install Helmfile
+        run: |
+          wget -O helmfile.tar.gz https://github.com/helmfile/helmfile/releases/download/v0.163.1/helmfile_0.163.1_linux_amd64.tar.gz
+          tar -xzf helmfile.tar.gz
+          sudo mv helmfile /usr/local/bin/helmfile
+          sudo chmod +x /usr/local/bin/helmfile
+          helmfile version
+
+      - name: Install dependencies
+        run: make install-deps
+
+      - name: Generate GitOps manifests
+        run: make generate-gitops
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [ -d "gitops" ] && [ -n "$(ls -A gitops)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push GitOps manifests
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add gitops/
+          git commit -m "chore: update GitOps manifests [skip ci]" || exit 0
+          git push

@@ -8,13 +8,13 @@ environments:
 namespace: dev-namespace
 releases:
   - name: backend
-    chart: ../../apps/backend/helm-charts
+    chart: oci://ghcr.io/nimeshadil/kubernetes-gitops-platform/helm-charts/backend
     version: 0.1.0
     installed: true
     values:
       - values.yaml
   - name: frontend
-    chart: ../../apps/frontend/helm-charts
+    chart: oci://ghcr.io/nimeshadil/kubernetes-gitops-platform/helm-charts/frontend
     version: 0.1.0
     installed: true
     values:
