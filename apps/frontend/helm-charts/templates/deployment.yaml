@@ -19,7 +19,8 @@ spec:
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: 8080
-          resources: {{- toYaml .Values.resources | nindent 12 }}
+          resources:
+{{ toYaml .Values.resources | nindent 12 }}
           env:
             {{- if .Values.env }}
             {{- range $name, $value := .Values.env }}
