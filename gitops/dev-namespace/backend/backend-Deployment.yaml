@@ -17,7 +17,7 @@ spec:
       containers:
       - env:
         - name: chart-version
-          value: 0.1.0
+          value: 0.1.1
         - name: component
           value: app
         - name: namespace
