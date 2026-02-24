@@ -15,14 +15,21 @@ spec:
         app: backend
     spec:
       containers:
-      - image: ghcr.io/nimeshadil/backend:latest
+      - env:
+        - name: chart-version
+          value: 0.1.0
+        - name: component
+          value: app
+        - name: namespace
+          value: dev-namespace
+        image: ghcr.io/nimeshadil/backend:latest
         name: backend
         ports:
         - containerPort: 3000
         resources:
           limits:
-            cpu: 1.5
+            cpu: '1.5'
             memory: 2Gi
           requests:
-            cpu: 1
+            cpu: '1'
             memory: 1.5Gi
