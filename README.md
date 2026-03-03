@@ -115,3 +115,8 @@ Frontend → Backend (REST API) → PostgreSQL
 
 ---
 
+---
+
+## Author
+
+[Nimesha Premaraja](https://github.com/NimeshaDil)
