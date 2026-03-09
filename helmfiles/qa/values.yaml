@@ -1,0 +1,4 @@
+env:
+  namespace: qa-namespace
+  component: app
+  chart-version: 0.1.1
