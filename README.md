@@ -2,9 +2,9 @@
 
 ## Overview
 
-This repository implements a robust, scalable, and secure feedback management platform using GitOps principles, containerization, and Kubernetes. The system delivers a full-stack application consisting of a web frontend, RESTful backend API, and persistent Postgres storage, with all infrastructure managed as code. Features include automated deployments, Helm-based packaging, and CI/CD with quality and security scans.
+A cloud-native feedback management platform built using GitOps, containerization, and Kubernetes. It provides a full-stack application (web frontend, REST API backend, and Postgres database) supporting automated deployments, Helm packaging, and CI/CD with quality and security scans.
 
-Designed for extensibility and rapid environment provisioning, this platform is ideal for organizations seeking cloud-native delivery and operational best practices.
+The platform is scalable, secure, and easily extensible, enabling rapid environment provisioning and modern cloud-native operational practices.
 
 
 ## Architecture
