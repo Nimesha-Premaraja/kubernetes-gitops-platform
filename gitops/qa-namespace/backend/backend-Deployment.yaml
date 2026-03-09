@@ -19,7 +19,7 @@ spec:
         - name: chart-version
           value: 0.1.1
         - name: component
-          value: app
+          value: qa
         - name: namespace
           value: qa-namespace
         image: ghcr.io/nimeshadil/backend:latest
