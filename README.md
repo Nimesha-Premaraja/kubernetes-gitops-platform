@@ -10,8 +10,6 @@ Designed for extensibility and rapid environment provisioning, this platform is 
 ## Architecture
 
 **Components:**
-- **Frontend (apps/frontend)**: Static web app built with HTML, CSS, and JavaScript, served via Nginx.
-- **Backend (apps/backend)**: Node.js/Express API for feedback CRUD, PostgreSQL client (`pg`), and rate-limiting (`express-rate-limit`).
 - **Database (apps/db)**: PostgreSQL with init.sql schema for feedback management.
 - **Containerization**: Each service runs in its own Docker container; multi-stage builds for lean production images.
 - **Infrastructure-as-Code:**
@@ -20,6 +18,8 @@ Designed for extensibility and rapid environment provisioning, this platform is 
   - **Helmfile** (helmfiles/dev) for release management and environment consistency.
   - **GitOps**: All infrastructure and manifests are versioned; manifests generated automatically via CI.
 - **CI/CD:** GitHub Actions automate build, packaging, release, and security.
+- **Frontend (apps/frontend)**: Static web app built with HTML, CSS, and JavaScript, served via Nginx.
+- **Backend (apps/backend)**: Node.js/Express API for feedback CRUD, PostgreSQL client (`pg`), and rate-limiting (`express-rate-limit`).
 
 **Service Flow:**
 Frontend → Backend (REST API) → PostgreSQL
@@ -27,13 +27,13 @@ Frontend → Backend (REST API) → PostgreSQL
 ---
 
 ## Tech Stack
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Node.js, Express
-- **Database:** PostgreSQL
 - **Containerization:** Docker, Docker Compose
 - **Orchestration & Packaging:** Helm, Helmfile, Kubernetes
-- **CI/CD:** GitHub Actions
+- **CI/CD:** GitHub Actions, Python Scripting
+- **Database:** PostgreSQL
 - **Security:** Trivy, GitHub Security Integration
+- **Frontend:** HTML, CSS, JavaScript
+- **Backend:** Node.js, Express
 
 ---
 
