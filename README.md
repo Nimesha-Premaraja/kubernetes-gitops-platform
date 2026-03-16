@@ -2,7 +2,7 @@
 
 ## Overview
 
-A cloud-native feedback management platform built using GitOps, containerization, and Kubernetes. It provides a full-stack application (web frontend, REST API backend, and Postgres database) supporting automated deployments, Helm packaging, and CI/CD with quality and security scans.
+A cloud-native feedback management platform built using GitOps Docker and Kubernetes. It provides a full-stack application (web frontend, REST API backend, and Postgres database) supporting automated deployments, Helm packaging, and CI/CD with quality and security scans.
 
 The platform is scalable, secure, and easily extensible, enabling rapid environment provisioning and modern cloud-native operational practices.
 
