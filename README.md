@@ -2,9 +2,9 @@
 
 ## Overview
 
-This repository demonstrate a complete cloud native GitOps platform with `Docker` and `Kubernetes`. The project contains a full-stack application (web frontend, REST API backend, and Postgres database) supporting automated deployments, Helm packaging, and CI/CD with quality and security scans.
+This repository demonstrate a complete cloud native GitOps platform with `Docker` and `Kubernetes`. The project contains a full-stack application (web frontend, REST API backend, and Postgres database) supporting automated Helm package and deployment with quality and security scans.
 
-The project is designed using latest cloud-native DevOps practices using real-world use cases.
+The project is designed using latest cloud-native DevOps best practices using real-world use cases.
 
 
 ## Architecture
