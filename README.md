@@ -14,7 +14,7 @@ The project is designed using latest cloud-native DevOps best practices using re
 - **Containerization**: Each service runs in its own Docker container; multi-stage builds for lean production images.
 - **Infrastructure-as-Code:**
   - **Docker Compose** for local development & orchestration.
-  - **Helm Charts** for Kubernetes deployments, templated for overrides.
+  - **Helm Charts** as the package manager for Kubernetes.
   - **Helmfile** (helmfiles/dev) for release management and environment consistency.
   - **GitOps**: All infrastructure and manifests are versioned; manifests generated automatically via CI.
 - **CI/CD:** GitHub Actions automate build, packaging, release, and security.
