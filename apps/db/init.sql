@@ -1,5 +1,0 @@
-CREATE TABLE IF NOT EXISTS feedback (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(50),
-  message TEXT
-);
