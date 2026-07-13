@@ -3,8 +3,10 @@ from flask_login import LoginManager
 from config import config
 from app.models import db, User
 import os
+import logging
 
 login_manager = LoginManager()
+logger = logging.getLogger(__name__)
 
 def create_app(config_name='development'):
     app = Flask(__name__)
@@ -15,9 +17,20 @@ def create_app(config_name='development'):
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Please log in to access this page.'
     
+    @login_manager.user_loader
+    def load_user(user_id):
+        try:
+            return User.query.get(int(user_id))
+        except Exception as e:
+            logger.error(f"Error loading user {user_id}: {str(e)}")
+            return None
+    
     with app.app_context():
-        db.create_all()
-        seed_default_users()
+        try:
+            db.create_all()
+            seed_default_users()
+        except Exception as e:
+            logger.error(f"Error initializing database: {str(e)}")
         
         from app.routes.auth import auth_bp
         from app.routes.bugs import bugs_bp
@@ -34,10 +47,6 @@ def create_app(config_name='development'):
             return redirect(url_for('dashboard.dashboard'))
     
     return app
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 def seed_default_users():
     if User.query.first() is not None:
