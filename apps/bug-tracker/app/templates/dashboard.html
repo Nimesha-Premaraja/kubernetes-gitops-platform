@@ -122,24 +122,25 @@
     }
 
     function loadRecentBugs(bugs) {
-        const tbody = document.getElementById('recent-bugs');
-        tbody.innerHTML = '';
-        if (bugs.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5">No bugs yet</td></tr>';
-            return;
-        }
-        bugs.forEach(bug => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td><a href="{{ url_for('bugs.detail_bug', bug_id='') }}${bug.id}">${bug.title}</a></td>
-                <td><span class="badge badge-${bug.status}">${bug.status}</span></td>
-                <td><span class="badge badge-${bug.priority}">${bug.priority}</span></td>
-                <td>${bug.created_at}</td>
-                <td><a href="{{ url_for('bugs.detail_bug', bug_id='') }}${bug.id}" class="link">View</a></td>
-            `;
-            tbody.appendChild(row);
-        });
-    }
+         const tbody = document.getElementById('recent-bugs');
+         tbody.innerHTML = '';
+         if (bugs.length === 0) {
+             tbody.innerHTML = '<tr><td colspan="5">No bugs yet</td></tr>';
+             return;
+         }
+         bugs.forEach(bug => {
+             const detailUrl = `/bugs/${bug.id}`;
+             const row = document.createElement('tr');
+             row.innerHTML = `
+                 <td><a href="${detailUrl}">${bug.title}</a></td>
+                 <td><span class="badge badge-${bug.status}">${bug.status}</span></td>
+                 <td><span class="badge badge-${bug.priority}">${bug.priority}</span></td>
+                 <td>${bug.created_at}</td>
+                 <td><a href="${detailUrl}" class="link">View</a></td>
+             `;
+             tbody.appendChild(row);
+         });
+     }
 
     document.addEventListener('DOMContentLoaded', loadDashboardStats);
 </script>
