@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: bug-tracker
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: bug-tracker-bug-tracker
+    app.kubernetes.io/version: 0.1.0
+  name: bug-tracker-bug-tracker
+  namespace: dev-namespace
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bug-tracker-bug-tracker
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: bug-tracker-bug-tracker
+    spec:
+      containers:
+      - env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              key: DATABASE_URL
+              name: bug-tracker-bug-tracker-secret
+        envFrom:
+        - configMapRef:
+            name: bug-tracker-bug-tracker-config
+        - secretRef:
+            name: bug-tracker-bug-tracker-secret
+        image: Nimesha-Premaraja/bug-tracker:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          timeoutSeconds: 5
+        name: bug-tracker
+        ports:
+        - containerPort: 5000
+          name: http
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /app/app/uploads
+          name: uploads
+      nodeSelector: {}
+      securityContext:
+        fsGroup: 1000
+      serviceAccountName: bug-tracker-bug-tracker-sa
+      tolerations: []
+      volumes:
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: bug-tracker-bug-tracker-pvc
