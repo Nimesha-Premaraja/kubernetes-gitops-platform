@@ -1,122 +1,73 @@
 # Kubernetes GitOps Platform
 
-## Overview
-
-This repository demonstrate a complete cloud native GitOps platform with `Docker` and `Kubernetes`. The project contains a full-stack application (web frontend, REST API backend, and Postgres database) supporting automated Helm package and deployment with quality and security scans.
-
-The project is designed using latest cloud-native DevOps best practices using real-world use cases.
+This repository manages GitOps CI/CD pipeline that deploy Kubernetes manifests generated from Helmfile definitions. It is used to deploy the [Bug Tracker application](https://github.com/Nimesha-Premaraja/bug-tracker) by rendering its Helm chart into version-controlled Kubernetes YAML under `gitops/`.
 
 
-## Architecture
+## Key Directories
 
-**Components:**
-- **Database (apps/db)**: PostgreSQL with init.sql schema for feedback management.
-- **Containerization**: Each service runs in its own Docker container; multi-stage builds for lean production images.
-- **Infrastructure-as-Code:**
-  - **Docker Compose** for local development & orchestration.
-  - **Helm Charts** as the package manager for Kubernetes.
-  - **Helmfile** (helmfiles/dev) for release management and environment consistency.
-  - **GitOps**: All infrastructure and manifests are versioned; manifests generated automatically via CI.
-- **CI/CD:** GitHub Actions automate build, packaging, release, and security.
-- **Frontend (apps/frontend)**: Static web app built with HTML, CSS, and JavaScript, served via Nginx.
-- **Backend (apps/backend)**: Node.js/Express API for feedback CRUD, PostgreSQL client (`pg`), and rate-limiting (`express-rate-limit`).
+- `.github/workflows/gitops-cd.yml`: GitHub Actions workflow for GitOps manifest generation.
+- `ci-cd/generator/gitops-generator.py`: Python generator that detects changed Helmfile environments and renders Kubernetes manifests.
+- `helmfiles/<environment>/helmfile.yaml`: Helmfile release definitions for each environment.
+- `helmfiles/<environment>/values.yaml`: Environment-specific Helm values. (Dev, QA, Staging, Production)
+- `gitops/`: Generated Kubernetes manifests committed back to the repository.
+- `Makefile`: Local and CI entry points for dependency checks and manifest generation.
 
-**Service Flow:**
-Frontend → Backend (REST API) → PostgreSQL
+## CI/CD Workflow
 
----
+The GitOps Continuous Delivery workflow is defined in `.github/workflows/gitops-cd.yml`.
 
-## Tech Stack
-- **Containerization:** Docker, Docker Compose
-- **Orchestration & Packaging:** Helm, Helmfile, Kubernetes
-- **CI/CD:** GitHub Actions, Python Scripting
-- **Database:** PostgreSQL
-- **Security:** Trivy, GitHub Security Integration
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Node.js, Express
+1. A pull request is opened or updated against `main`.
+2. GitHub Actions checks out the PR branch with full Git history.
+3. Python 3.11 is installed using `actions/setup-python`.
+4. Helm v3.14.0 is installed using `azure/setup-helm`.
+5. Helmfile v0.163.1 is downloaded and installed.
+6. `make install-deps` validates required tools and installs the Python dependency `PyYAML`.
+7. `make generate-gitops` runs `ci-cd/generator/gitops-generator.py`.
+8. The generator detects changed folders under `helmfiles/` from the latest commit.
+9. For each changed environment, Helmfile renders the configured Helm releases.
+10. Rendered Kubernetes resources are split into individual YAML files and written under `gitops/<namespace>/<release>/`.
+11. The workflow checks whether `gitops/` has changed using Git status.
+12. If generated manifests changed, the workflow commits them with `gitops: regenerated [skip ci]`.
+13. For same-repository pull requests, the workflow pushes the generated `gitops/` changes back to the PR branch.
 
----
+## Deployed Application
 
-## Prerequisites
+This GitOps repository deploys the Bug Tracker application:
 
-**Local (Docker Compose):**
-- Docker (v20+ recommended)
-- Docker Compose
+- Application repository: https://github.com/Nimesha-Premaraja/bug-tracker
+- Helm chart source: `oci://ghcr.io/nimesha-premaraja/bug-tracker/helm-charts/bug-tracker`
 
-**Kubernetes Platform:**
-- Access to a Kubernetes cluster (local or cloud)
-- kubectl
-- Helm v3.14+
-- Helmfile v0.163+
-- Python 3.11+ (for manifest generator)
 
----
 
-## Deployment Steps
 
-### Local Development (Docker Compose)
-1. Clone repository:
-   ```bash
-   git clone <repo-url>
-   cd kubernetes-gitops-platform
-   ```
-2. Start all services:
-   ```bash
-   docker-compose up --build
-   ```
-3. Access:
-   - Frontend: http://localhost:8080
-   - Backend API: http://localhost:3000/feedback
-   - Database: localhost:5432 (see docker-compose.yml for credentials)
-4. Stop:
-   ```bash
-   docker-compose down -v
-   ```
+## GitOps Generation Flow
 
-### Kubernetes Deployment (Cloud or Minikube)
-1. Install dependencies (see Prerequisites).
-2. Configure Helmfile values in `helmfiles/dev/values.yaml` as needed.
-3. Apply with Helmfile:
-   ```bash
-   helmfile -f helmfiles/dev/helmfile.yaml apply
-   ```
-4. Monitor pods/services in the `dev-namespace` namespace via kubectl.
+```text
+helmfiles/<environment>/values.yaml
+        ↓
+helmfiles/<environment>/helmfile.yaml
+        ↓
+helmfile template
+        ↓
+ci-cd/generator/gitops-generator.py
+        ↓
+gitops/<namespace>/<release>/<resource-name>-<Kind>.yaml
+        ↓
+GitHub Actions commits generated manifest changes to the PR branch
+```
 
----
+## Tools And Technologies
 
-## CI/CD Flow
+- Kubernetes: Target platform for generated manifests.
+- Helm: Kubernetes package manager used to render charts.
+- Helmfile: Declarative release management for each environment.
+- GitHub Actions: CI/CD runner for automated GitOps generation.
+- Python: Runtime for the GitOps generator.
+- PyYAML: YAML parsing and manifest splitting in the generator.
+- Make: Common command interface for CI and local workflows.
+- GitHub Container Registry: OCI Helm chart registry used by the Bug Tracker chart.
 
-- **Build and Push Docker Images**:
-  - Automated via `.github/workflows/docker-build.yaml` (dispatch triggered)
-  - Builds and pushes frontend/backend images to GitHub Container Registry (GHCR) with unique tags
 
-- **Helm Chart Packaging & Publishing**:
-  - `.github/workflows/helm-charts-publish.yml` packages Helm charts for backend/frontend and pushes them to GHCR
+## Generated Manifests
 
-- **GitOps Manifest Generation & Continuous Delivery**:
-  - `.github/workflows/gitops-cd.yml` runs on changes to infra/manifests and generates release manifests using Python generator, Helm, Helmfile
-  - Automatically commits and pushes GitOps manifests on update
-
-- **Security Scanning**:
-  - `.github/workflows/trivy-code-scan.yaml` runs Trivy on PRs for both frontend and backend
-  - Results uploaded to GitHub Security dashboard for review
-
----
-
-## Security Considerations
-
-- **Static scanning:** Trivy scans all code for vulnerabilities, secrets, and misconfigurations on each PR
-- **Non-root containers:** Backend runs as a non-root user; frontend and database use official images
-- **Rate limiting:** Express rate limiter protects backend from brute force and abuse
-- **Environment isolation:** Each service runs as a separate container and can run in isolated Kubernetes namespaces
-- **Secrets management:** Avoid hardcoding secrets; use environment variables and cluster secrets in production
-- **Port exposure:** Only required ports are exposed (frontend: 80/8080, backend: 3000, db: 5432)
-- **Image minimization:** Multi-stage builds deliver smaller, less vulnerable images
-
----
-
----
-
-## Author
-
-[Nimesha Premaraja](https://github.com/NimeshaDil)
+Generated files in `gitops/` are the desired Kubernetes state for each environment. These files should normally be updated through the GitOps generation workflow instead of being edited manually.
