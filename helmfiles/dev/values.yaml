@@ -1,4 +1,1 @@
-env:
-  namespace: dev-namespace
-  component: app
-  chart-version: 0.1.1
+env: {}

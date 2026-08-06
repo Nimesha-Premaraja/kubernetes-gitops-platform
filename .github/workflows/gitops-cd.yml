@@ -22,6 +22,7 @@ on:
 jobs:
   generate-gitops-manifests:
     runs-on: ubuntu-latest
+    continue-on-error: false
     permissions:
       contents: write
     
