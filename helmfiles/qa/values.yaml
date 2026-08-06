@@ -1,4 +1,2 @@
-env:
-  namespace: qa-namespace
-  component: qa
-  chart-version: 0.1.1
+hpa:
+  enabled: true

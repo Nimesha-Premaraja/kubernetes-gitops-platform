@@ -5,7 +5,7 @@ environments:
     values:
       - values.yaml
 ---
-namespace: dev-namespace
+namespace: dev
 releases:
   - name: bug-tracker
     chart: oci://ghcr.io/nimesha-premaraja/bug-tracker/helm-charts/bug-tracker     
