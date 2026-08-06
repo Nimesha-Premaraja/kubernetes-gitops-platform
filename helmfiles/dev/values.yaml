@@ -1,4 +1,4 @@
 env: {}
 namespace: dev-namespace
 hpa:
-  enabled: false
+  enabled: true
