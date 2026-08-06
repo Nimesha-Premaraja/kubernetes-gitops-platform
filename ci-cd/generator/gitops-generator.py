@@ -54,6 +54,18 @@ else:
         ROOT_DIR = Path(f"helmfiles/{ns}/")
         HELMFILE = ROOT_DIR / "helmfile.yaml"
 
+        try:
+            with open(HELMFILE, "r") as f:
+                helmfile_docs = list(yaml.safe_load_all(f))
+        except yaml.YAMLError as e:
+            print(f"⚠️ YAML parse error in {HELMFILE}: {e}")
+            continue
+
+        output_namespace = next(
+            (doc.get("namespace") for doc in helmfile_docs if isinstance(doc, dict) and doc.get("namespace")),
+            ns,
+        )
+
         # Render Helm templates
         result = subprocess.run([
             "helmfile",
@@ -79,6 +91,10 @@ else:
         if not tmp_path.exists():
             print(f"\n🛑 No templates generated under {tmp_path} \n")
             continue
+
+        namespace_output_dir = GITOPS_DIR / output_namespace
+        if namespace_output_dir.exists():
+            shutil.rmtree(namespace_output_dir)
 
         for yaml_file in tmp_path.rglob("*.yaml"):
             # Determine namespace and release from folder structure
