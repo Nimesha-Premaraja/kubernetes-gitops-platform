@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/instance: bug-tracker
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: bug-tracker-bug-tracker
+    app.kubernetes.io/version: 0.1.0
+  name: bug-tracker-bug-tracker-pvc
+  namespace: bug-tracker
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
