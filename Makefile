@@ -1,18 +1,18 @@
 .PHONY: help install-deps generate-gitops clean
 
 # Default target
-help:
-	@echo "GitOps Continuous Delivery Makefile"
-	@echo ""
-	@echo "Available targets:"
-	@echo "  help           - Show this help message"
-	@echo "  install-deps   - Install required dependencies (Helm, Helmfile, Python packages)"
-	@echo "  generate-gitops - Run gitops-generator.py to template Helm charts"
-	@echo "  clean          - Remove temporary template files (preserves gitops/)"
-	@echo ""
-	@echo "Environment Variables:"
-	@echo "  TMP_DIR        - Temporary directory for helm templates (default: templates)"
-	@echo "  CONCURRENCY    - Helmfile concurrency level (default: 20)"
+# help:
+# 	@echo "GitOps Continuous Delivery Makefile"
+# 	@echo ""
+# 	@echo "Available targets:"
+# 	@echo "  help           - Show this help message"
+# 	@echo "  install-deps   - Install required dependencies (Helm, Helmfile, Python packages)"
+# 	@echo "  generate-gitops - Run gitops-generator.py to template Helm charts"
+# 	@echo "  clean          - Remove temporary template files (preserves gitops/)"
+# 	@echo ""
+# 	@echo "Environment Variables:"
+# 	@echo "  TMP_DIR        - Temporary directory for helm templates (default: templates)"
+# 	@echo "  CONCURRENCY    - Helmfile concurrency level (default: 20)"
 
 # Install dependencies
 install-deps:
