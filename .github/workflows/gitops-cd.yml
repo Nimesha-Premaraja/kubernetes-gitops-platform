@@ -60,7 +60,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A gitops/
-          git commit -m "chore: update GitOps manifests [skip ci]" || exit 0
+          git commit -m "gitops: regenerated [skip ci]" || exit 0
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             git push origin HEAD:${{ github.head_ref }}
           else
