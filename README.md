@@ -1,6 +1,6 @@
 # Kubernetes GitOps Platform
 
-This repository manages GitOps CI/CD pipeline that deploy Kubernetes manifests generated from Helmfile definitions. It is used to deploy the [Bug Tracker application](https://github.com/Nimesha-Premaraja/bug-tracker) by rendering its Helm chart into version-controlled Kubernetes YAML under `gitops/`.
+This repository manages GitOps workflow that act as single source of truth to deploy Kubernetes manifests generated from Helmfile definitions. It is used to deploy the [Bug Tracker application](https://github.com/Nimesha-Premaraja/bug-tracker) by rendering its Helm chart into version-controlled Kubernetes YAML under `gitops/`.
 
 
 ## Key Directories
